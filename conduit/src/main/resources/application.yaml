@@ -14,5 +14,10 @@ spring:
   flyway:
     enabled: true
 
+security:
+  jwt:
+    expiration: 86400000
+    secret: CjInGqmvcCVMOMbxZK7U+8VxPK78bwj224ycSyTEjwA=
+
 server:
   port: 3000
