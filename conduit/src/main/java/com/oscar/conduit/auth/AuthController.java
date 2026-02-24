@@ -23,7 +23,7 @@ public class AuthController {
     this.authService = authService;
   }
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<UserResponse> handleRegister(@Valid @RequestBody RegisterRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
   }
