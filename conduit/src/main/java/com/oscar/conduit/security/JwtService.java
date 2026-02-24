@@ -25,20 +25,20 @@ public class JwtService {
 
   public String issue(Long userId, String email, List<String> roles) {
     return Jwts.builder()
-      .subject(email)
-      .expiration(
-        new Date(System.currentTimeMillis() + jwtProperties.getExpiration())
-      )
-      .signWith(getSigningKey())
-      .claim("a", roles)
-      .compact();
+        .subject(userId.toString())
+        .expiration(
+            new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
+        .signWith(getSigningKey())
+        .claim("email", email)
+        .claim("roles", roles)
+        .compact();
   }
 
   public Claims decode(String token) {
     return Jwts.parser()
-      .verifyWith(getSigningKey())
-      .build()
-      .parseSignedClaims(token)
-      .getPayload();
+        .verifyWith(getSigningKey())
+        .build()
+        .parseSignedClaims(token)
+        .getPayload();
   }
 }
