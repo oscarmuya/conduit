@@ -1,12 +1,17 @@
 package com.oscar.conduit.user;
 
+import java.util.function.Consumer;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.oscar.conduit.auth.dto.request.LoginRequest;
 import com.oscar.conduit.auth.dto.request.RegisterRequest;
+import com.oscar.conduit.dto.response.UserResponse;
 import com.oscar.conduit.exception.InvalidEmailOrPasswordException;
 import com.oscar.conduit.exception.UserNotFoundException;
+import com.oscar.conduit.security.JwtService;
+import com.oscar.conduit.user.dto.request.UpdateUserRequest;
 
 @Service
 public class UserService {
@@ -48,6 +53,33 @@ public class UserService {
 
   public boolean userExistsByEmail(String email) {
     return userRepository.existsByEmail(email);
+  }
+
+  public UserResponse getCurrentUser(String email) {
+    User user = getUserByEmail(email);
+    return UserResponse.from("", user);
+  }
+
+  public UserResponse updateUser(String email, UpdateUserRequest request) {
+    User user = getUserByEmail(email);
+    UpdateUserRequest.User updateData = request.user();
+
+    updateIfPresent(user::setBio, updateData.bio());
+    updateIfPresent(user::setEmail, updateData.email());
+    updateIfPresent(user::setUsername, updateData.username());
+    updateIfPresent((value) -> {
+      String hashed = passwordEncoder.encode(value);
+      user.setpasswordHash(hashed);
+    }, updateData.password());
+    updateIfPresent(user::setImage, updateData.image());
+
+    return UserResponse.from("", userRepository.save(user));
+  }
+
+  private <T> void updateIfPresent(Consumer<T> setter, T value) {
+    if (value != null) {
+      setter.accept(value);
+    }
   }
 
 }
