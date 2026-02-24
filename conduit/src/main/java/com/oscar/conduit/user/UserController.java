@@ -26,13 +26,14 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<UserResponse> handleGetCurrentUser(Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK).body(userService.getCurrentUser(authentication.getName()));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(userService.getCurrentUser(Long.parseLong(authentication.getName())));
   }
 
   @PutMapping
   public ResponseEntity<UserResponse> handleUpdateUser(Authentication authentication,
       @Valid @RequestBody UpdateUserRequest request) {
-    return ResponseEntity.ok(userService.updateUser(authentication.getName(), request));
+    return ResponseEntity.ok(userService.updateUser(Long.parseLong(authentication.getName()), request));
   }
 
 }
