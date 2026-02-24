@@ -31,6 +31,10 @@ public class UserService {
     return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
   }
 
+  public User getUserByUsername(String username) {
+    return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException());
+  }
+
   public User create(RegisterRequest request) {
     String passwordHash = passwordEncoder.encode(request.user().password());
     User user = new User(
@@ -55,13 +59,13 @@ public class UserService {
     return userRepository.existsByEmail(email);
   }
 
-  public UserResponse getCurrentUser(String email) {
-    User user = getUserByEmail(email);
+  public UserResponse getCurrentUser(Long id) {
+    User user = getUserById(id);
     return UserResponse.from("", user);
   }
 
-  public UserResponse updateUser(String email, UpdateUserRequest request) {
-    User user = getUserByEmail(email);
+  public UserResponse updateUser(Long id, UpdateUserRequest request) {
+    User user = getUserById(id);
     UpdateUserRequest.User updateData = request.user();
 
     updateIfPresent(user::setBio, updateData.bio());
