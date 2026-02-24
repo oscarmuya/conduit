@@ -1,31 +1,35 @@
 package com.oscar.conduit.auth;
 
-import com.oscar.conduit.security.JwtService;
-import java.util.List;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.oscar.conduit.auth.dto.request.LoginRequest;
+import com.oscar.conduit.auth.dto.request.RegisterRequest;
+import com.oscar.conduit.dto.response.UserResponse;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/users")
 public class AuthController {
 
-  private final JwtService jwtService;
+  private final AuthService authService;
 
-  public AuthController(JwtService jwtService) {
-    this.jwtService = jwtService;
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
+
+  @PostMapping("/")
+  public ResponseEntity<UserResponse> handleRegister(@Valid @RequestBody RegisterRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
   }
 
   @PostMapping("/login")
-  public String handleLogin() {
-    String token = jwtService.issue(1L, "oscarmuya@gmail.com", List.of());
-    return token;
-  }
-
-  @GetMapping("/me")
-  public String greeting(Authentication authentication) {
-    return "Hello  " + authentication.getName();
+  public ResponseEntity<UserResponse> handleLogin(@Valid @RequestBody LoginRequest request) {
+    return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
   }
 }
