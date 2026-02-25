@@ -8,10 +8,10 @@ import com.oscar.conduit.user.UserService;
 
 @Service
 public class FollowService {
-  private final FollowRespository followRepository;
+  private final FollowRepository followRepository;
   private final UserService userService;
 
-  public FollowService(FollowRespository followRepository, UserService userService) {
+  public FollowService(FollowRepository followRepository, UserService userService) {
     this.followRepository = followRepository;
     this.userService = userService;
   }
