@@ -30,6 +30,19 @@ public class GlobalExceptionHandler {
         new ErrorResponse(message));
   }
 
+  // artice
+  @ExceptionHandler(ArticleNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleArticleNotFound(Exception ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+        new ErrorResponse(ex.getMessage()));
+  }
+
+  @ExceptionHandler(UnauthorizedException.class)
+  public ResponseEntity<ErrorResponse> handleUnauthorizedAccess(Exception ex) {
+    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+        new ErrorResponse(ex.getMessage()));
+  }
+
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorResponse> handleRequestNotReadable(Exception ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

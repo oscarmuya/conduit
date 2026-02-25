@@ -54,6 +54,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(registry -> registry
             .requestMatchers(HttpMethod.GET, "/api/profiles/*").permitAll()
             .requestMatchers("/api/users/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/tags/*").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(
             jwtAuthenticationFilter,
